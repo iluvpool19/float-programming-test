@@ -17,3 +17,35 @@ test( 'BALANCED PARENTHESES: returns true for balanced string', t => {
     t.equal( result, true, 'result is correct' );
     t.end();
 } );
+
+test( 'BALANCED PARENTHESES: returns false for unbalanced strings', t => {
+  const input = '()())';
+  const results = fpt.balancedParentheses( input );
+
+  t.equal( results, false, 'result is correct' );
+  t.end();
+} );
+
+test( 'BALANCED PARENTHESES: returns false for closing paren first', t => {
+    const input = ')x + y(';
+    const result = fpt.balancedParentheses( input );
+
+    t.equal( result, false, 'result is correct' );
+    t.end();
+} );
+
+test( 'BALANCED PARENTHESES: returns false for anything without parens', t => {
+    const input = 'x + y';
+    const result = fpt.balancedParentheses( input );
+
+    t.equal( result, false, 'result is correct' );
+    t.end();
+} );
+
+test( 'BALANCED PARENTHESES: returns false for empty string', t => {
+    const input = '';
+    const result = fpt.balancedParentheses( input );
+
+    t.equal( result, false, 'result is correct' );
+    t.end();
+} );

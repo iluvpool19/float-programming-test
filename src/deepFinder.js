@@ -2,49 +2,33 @@
 
 /*
  * deepFinder
- * 
+ *
  * Takes an input and a test function and returns any values
  * in the input *recursively* that pass the test.
  *
  * Eg:
- * 
+ *
  *   input: [ 'ant', 'baby', [ 'apple', 'banana', 'carrot' ], { foo: 'aardvark' }, 'allegory' ]
  *   test: value => /^a/i.test( value )
  *   returns: [ 'ant', 'apple', 'aardvark', 'allegory' ]
- * 
+ *
  */
 module.exports = ( input, test ) => {
-  // make sure input is array
-  if (!Array.isArray(input)) return [];
-
   // declare return value
-  const retArr = [];
+  let retArr = [];
 
-  // define recursive function
-  function helper (restOfInput) {
-    // base case for when array is empty
-    if (!restOfInput.length) {
-      return;
-    }
-    // check if current value is array so we can call the recursive function on it
-    if (Array.isArray(restOfInput[0])) {
-      return helper(restOfInput[0].concat(restOfInput.slice(1)));
-    }
-    // check if curr value is object
-    if (typeof restOfInput[0] === 'object') {
-      const arrOfObjVals = [];
-      for (let key in restOfInput[0]) {
-        arrOfObjVals.push(restOfInput[0][key]);
-      }
-      return helper(arrOfObjVals.concat(restOfInput.slice(1)));
-    }
-    // it passes the test push to return value
-    if (test(restOfInput[0])) {
-      retArr.push(restOfInput[0]);
-    }
-    return helper(restOfInput.slice(1));
+  // make sure input is object || array
+  if (typeof input !== 'object') {
+    return test(input) ? [input] : retArr;
   }
-  // call recursive function on array and return the value
-  helper(input);
+
+  Object.keys( input ).forEach( val => {
+    if ( typeof input[val] === 'object') {
+      retArr = retArr.concat( module.exports( input[val], test ));
+    } else if ( test( input[val] ) ){
+      retArr.push( input[val] );
+    }
+  })
+
   return retArr;
 };
